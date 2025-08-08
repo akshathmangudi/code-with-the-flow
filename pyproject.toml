@@ -1,0 +1,32 @@
+[project]
+name = "vibe-coder"
+version = "0.1.0"
+description = "A vibe-coding app that can be integrated with puch-ai's whatsapp mcp server"
+authors = [
+    {name = "Vibe Coder Team", email = "team@vibecoder.com"}
+]
+dependencies = [
+    "fastmcp>=0.1.0",
+    "uvicorn>=0.24.0",
+    "flask>=3.0.0",
+    "requests>=2.31.0",
+    "python-dotenv>=1.0.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0.0",
+    "black>=23.0.0",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.black]
+line-length = 88
+target-version = ['py311']
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
