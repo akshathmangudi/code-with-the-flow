@@ -1,0 +1,11 @@
+# MCP Server Dependencies
+fastapi
+uvicorn
+python-dotenv
+fastmcp
+
+# Google Cloud and Generative AI
+google-cloud-aiplatform
+vertexai
+requests
+
