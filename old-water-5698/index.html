@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kilograms to Pounds Converter</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #eef2f5;
+            padding-top: 50px;
+            box-sizing: border-box;
+        }
+
+        .container {
+            background-color: #ffffff;
+            padding: 35px;
+            border-radius: 12px;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 90%;
+            max-width: 420px;
+            box-sizing: border-box;
+        }
+
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 30px;
+            font-size: 2em;
+            font-weight: 600;
+        }
+
+        .input-group, .output-group {
+            margin-bottom: 25px;
+            text-align: left;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            color: #34495e;
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+
+        input[type="number"] {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ced4da;
+            border-radius: 8px;
+            font-size: 1.1em;
+            box-sizing: border-box;
+            outline: none;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        input[type="number"]:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+        }
+
+        button {
+            background-color: #007bff;
+            color: white;
+            padding: 14px 25px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.2em;
+            font-weight: 600;
+            transition: background-color 0.3s ease, transform 0.1s ease;
+            width: 100%;
+            box-sizing: border-box;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+            transform: translateY(-1px);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        #poundsOutput {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 1.3em;
+            color: #28a745; /* Green for success */
+            min-height: 1.3em;
+            text-align: left;
+            word-wrap: break-word;
+            border: 1px solid #e2e6ea;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>KG to LBS Converter</h1>
+
+        <div class="input-group">
+            <label for="kilograms">Kilograms (kg):</label>
+            <input type="number" id="kilograms" placeholder="Enter kilograms" step="any" min="0">
+        </div>
+
+        <button id="convertBtn">Convert to Pounds</button>
+
+        <div class="output-group">
+            <label for="poundsOutput">Pounds (lbs):</label>
+            <p id="poundsOutput"></p>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const kilogramsInput = document.getElementById('kilograms');
+            const convertBtn = document.getElementById('convertBtn');
+            const poundsOutput = document.getElementById('poundsOutput');
+
+            const KG_TO_LBS_FACTOR = 2.20462;
+
+            function convertKgToLbs() {
+                const kgValue = parseFloat(kilogramsInput.value);
+
+                if (isNaN(kgValue) || kgValue < 0) {
+                    poundsOutput.textContent = 'Please enter a valid positive number.';
+                    poundsOutput.style.color = '#dc3545'; /* Red for error */
+                    poundsOutput.style.borderColor = '#dc3545';
+                    return;
+                }
+
+                const lbsValue = kgValue * KG_TO_LBS_FACTOR;
+                poundsOutput.textContent = `${lbsValue.toFixed(3)} lbs`; // Display with 3 decimal places
+                poundsOutput.style.color = '#28a745'; /* Green for success */
+                poundsOutput.style.borderColor = '#e2e6ea'; /* Reset border color */
+            }
+
+            convertBtn.addEventListener('click', convertKgToLbs);
+
+            kilogramsInput.addEventListener('keypress', (event) => {
+                if (event.key === 'Enter') {
+                    convertKgToLbs();
+                }
+            });
+
+            // Set initial placeholder/empty state for output
+            poundsOutput.textContent = '';
+        });
+    </script>
+</body>
+</html>

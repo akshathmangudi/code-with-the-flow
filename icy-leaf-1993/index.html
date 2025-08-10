@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shreyas Kulkarni - Software Engineer Portfolio</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: -apple-system, BlinkMacMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+            color: #e0e0e0;
+            background-color: #1a1a1a;
+        }
+
+        a {
+            color: #007bff;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        a:hover {
+            color: #0056b3;
+        }
+
+        .container {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        header {
+            background-color: #242424;
+            padding: 20px 0;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        header nav {
+            margin-bottom: 20px;
+        }
+
+        header nav a {
+            color: #f0f0f0;
+            margin: 0 15px;
+            font-weight: bold;
+            font-size: 1.1em;
+            padding: 5px 0;
+            border-bottom: 2px solid transparent;
+            transition: border-bottom 0.3s ease;
+        }
+
+        header nav a:hover {
+            color: #007bff;
+            border-bottom: 2px solid #007bff;
+        }
+
+        .hero {
+            padding: 50px 20px;
+        }
+
+        .hero h1 {
+            font-size: 3em;
+            margin-bottom: 10px;
+            color: #fff;
+        }
+
+        .hero p {
+            font-size: 1.3em;
+            color: #ccc;
+        }
+
+        section {
+            padding: 60px 0;
+        }
+
+        section:nth-child(even) {
+            background-color: #242424;
+        }
+
+        h2 {
+            font-size: 2.5em;
+            text-align: center;
+            margin-bottom: 40px;
+            color: #fff;
+            position: relative;
+        }
+
+        h2::after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 3px;
+            background-color: #007bff;
+            margin: 10px auto 0;
+        }
+
+        .skills-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .skills-grid span {
+            background-color: #007bff;
+            color: #fff;
+            padding: 8px 15px;
+            border-radius: 5px;
+            font-size: 1em;
+            white-space: nowrap;
+            transition: transform 0.2s ease;
+        }
+
+        .skills-grid span:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 8px rgba(0, 123, 255, 0.3);
+        }
+
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .project-card {
+            background-color: #2e2e2e;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .project-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
+        }
+
+        .project-card h3 {
+            color: #007bff;
+            margin-top: 0;
+            font-size: 1.5em;
+            margin-bottom: 15px;
+        }
+
+        .project-card p {
+            color: #ccc;
+            flex-grow: 1;
+        }
+
+        .project-card p em {
+            display: block;
+            margin-top: 10px;
+            font-size: 0.9em;
+            color: #aaa;
+        }
+
+        .project-card .button {
+            display: inline-block;
+            background-color: #007bff;
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-align: center;
+            margin-top: 20px;
+            transition: background-color 0.3s ease;
+        }
+
+        .project-card .button:hover {
+            background-color: #0056b3;
+        }
+
+        .contact-links {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .contact-links .button {
+            background-color: #007bff;
+            color: #fff;
+            padding: 12px 25px;
+            border-radius: 5px;
+            text-align: center;
+            margin: 0 10px;
+            display: inline-block;
+            transition: background-color 0.3s ease;
+        }
+
+        .contact-links .button:hover {
+            background-color: #0056b3;
+        }
+
+        footer {
+            background-color: #1a1a1a;
+            color: #ccc;
+            text-align: center;
+            padding: 20px;
+            font-size: 0.9em;
+            border-top: 1px solid #2e2e2e;
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5em;
+            }
+
+            .hero p {
+                font-size: 1.1em;
+            }
+
+            h2 {
+                font-size: 2em;
+            }
+
+            header nav a {
+                margin: 0 10px;
+                font-size: 1em;
+            }
+
+            .projects-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .contact-links .button {
+                display: block;
+                margin: 10px auto;
+                max-width: 200px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            header nav {
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+            }
+            header nav a {
+                margin: 5px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <a href="#about">About</a>
+            <a href="#skills">Skills</a>
+            <a href="#projects">Projects</a>
+            <a href="#contact">Contact</a>
+        </nav>
+        <div class="hero">
+            <h1>Shreyas Kulkarni</h1>
+            <p>Software Engineer | Building scalable and innovative solutions.</p>
+        </div>
+    </header>
+
+    <main>
+        <section id="about" class="container">
+            <h2>About Me</h2>
+            <p>
+                A highly motivated and results-driven Software Engineer with 5+ years of experience in designing, developing, and deploying robust web applications. Proficient in both front-end and back-end development, with a strong emphasis on building scalable, maintainable, and high-performance systems. I am passionate about leveraging technology to solve complex problems and deliver exceptional user experiences.
+            </p>
+            <p>
+                My expertise includes working with modern JavaScript frameworks, cloud computing platforms, database management, and agile development methodologies. I am a quick learner, a collaborative team player, and always eager to adopt new technologies and best practices to drive innovation.
+            </p>
+        </section>
+
+        <section id="skills" class="container">
+            <h2>Skills</h2>
+            <div class="skills-grid">
+                <span>Python</span>
+                <span>JavaScript</span>
+                <span>Go</span>
+                <span>React.js</span>
+                <span>Node.js</span>
+                <span>Django</span>
+                <span>Flask</span>
+                <span>Express.js</span>
+                <span>SQL (PostgreSQL, MySQL)</span>
+                <span>NoSQL (MongoDB, Redis)</span>
+                <span>Docker</span>
+                <span>Kubernetes</span>
+                <span>AWS</span>
+                <span>Azure</span>
+                <span>Git</span>
+                <span>CI/CD</span>
+                <span>RESTful APIs</span>
+                <span>Microservices</span>
+                <span>HTML5</span>
+                <span>CSS3</span>
+            </div>
+        </section>
+
+        <section id="projects" class="container">
+            <h2>Projects</h2>
+            <div class="projects-grid">
+                <div class="project-card">
+                    <h3>AI-Powered Content Generator</h3>
+                    <p>Developed a full-stack application leveraging OpenAI API to generate diverse content (articles, social media posts) with user authentication and content management features.</p>
+                    <p><em>Tech: Python, Django REST Framework, React, PostgreSQL, OpenAI API</em></p>
+                    <a href="https://example.com/project1" target="_blank" class="button">View Project</a>
+                </div>
+                <div class="project-card">
+                    <h3>Real-time Collaboration Platform</h3>
+                    <p>Engineered a real-time collaborative document editing platform with WebSockets, enabling multiple users to co-edit simultaneously.</p>
+                    <p><em>Tech: Node.js, Express, Socket.IO, MongoDB, React</em></p>
+                    <a href="https://example.com/project2" target="_blank" class="button">View Project</a>
+                </div>
+                <div class="project-card">
+                    <h3>Serverless Data Processing Pipeline</h3>
+                    <p>Designed and implemented a serverless ETL pipeline on AWS for processing large datasets, including S3, Lambda, and DynamoDB integrations.</p>
+                    <p><em>Tech: AWS Lambda, S3, DynamoDB, Python, Serverless Framework</em></p>
+                    <a href="https://example.com/project3" target="_blank" class="button">View Project</a>
+                </div>
+            </div>
+        </section>
+
+        <section id="contact" class="container">
+            <h2>Get In Touch</h2>
+            <p>I am actively seeking new challenges and opportunities. Please feel free to connect or reach out!</p>
+            <div class="contact-links">
+                <a href="mailto:shreyas.kulkarni@example.com" class="button">Email Me</a>
+                <a href="https://linkedin.com/in/shreyaskulkarni_dev" target="_blank" class="button">LinkedIn</a>
+                <a href="https://github.com/shreyas-dev" target="_blank" class="button">GitHub</a>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2023 Shreyas. All rights reserved.</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+
+                    document.querySelector(this.getAttribute('href')).scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                });
+            });
+        });
+    </script>
+</body>
+</html>
