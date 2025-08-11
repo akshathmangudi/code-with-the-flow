@@ -1,7 +1,7 @@
 [project]
 name = "vibe-coder"
 version = "0.1.0"
-description = "A vibe-coding app that can be integrated with puch-ai's whatsapp mcp server"
+description = "A generative AI application for creating, previewing, and deploying single-page web applications."
 authors = [
     {name = "Vibe Coder Team", email = "team@vibecoder.com"}
 ]

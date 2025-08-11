@@ -1,6 +1,11 @@
+"""
+This module provides utility functions for the Vibe Coder application,
+including project name generation and network utilities.
+"""
 import re
 import os
 import random
+import socket
 
 ADJECTIVES = [
     "autumn", "hidden", "bitter", "misty", "silent", "empty", "dry", "dark",
@@ -27,7 +32,12 @@ NOUNS = [
 ]
 
 def generate_random_project_name() -> str:
-    """Generates a random, memorable project name."""
+    """
+    Generates a random, memorable project name from a list of adjectives and nouns.
+    
+    Returns:
+        A string representing the random project name.
+    """
     adj = random.choice(ADJECTIVES)
     noun = random.choice(NOUNS)
     num = random.randint(1000, 9999)
@@ -64,6 +74,22 @@ def is_port_in_use(port: int) -> bool:
     Returns:
         True if the port is in use, False otherwise.
     """
-    import socket
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         return s.connect_ex(('localhost', port)) == 0
+
+
+def sanitize_project_name(name: str) -> str:
+    """
+    Sanitizes a string to be a valid project/directory name.
+    
+    Args:
+        name: The string to sanitize.
+        
+    Returns:
+        The sanitized string.
+    """
+    name = name.lower()
+    name = re.sub(r'[\s_]+', '-', name)
+    name = re.sub(r'[^a-z0-9-]', '', name)
+    name = name.strip('-')
+    return name
