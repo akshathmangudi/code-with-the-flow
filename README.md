@@ -1,5 +1,7 @@
 # Code with the Flow
 
+**View all the deployed projects inside [vibecode-deployed-projects](https://github.com/akshathmangudi/vibecode-deployed-projects)**
+
 **Code with the Flow** is a generative AI application that allows users to create, preview, and deploy single-page web applications from a natural language prompt. It is designed to be a seamless and intuitive tool for rapid prototyping and development, enabling you to bring your ideas to life by simply describing them.
 
 ## Features
