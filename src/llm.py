@@ -2,7 +2,7 @@
 This module contains functions for interacting with the generative language model.
 """
 import re
-from src.config import gemini_model
+from src.config import GEMINI_MODEL
 
 async def generate_single_page_app(user_prompt: str) -> str:
     """
@@ -14,7 +14,7 @@ async def generate_single_page_app(user_prompt: str) -> str:
     Returns:
         The HTML content of the web application as a string.
     """
-    if not gemini_model:
+    if not GEMINI_MODEL:
         return "<h1>Error: Gemini model not initialized</h1>"
     try:
         system_prompt = """You are an expert web developer. Your task is to create a complete, single-file, self-contained web application based on a user's prompt.
@@ -29,7 +29,7 @@ IMPORTANT CONSTRAINTS:
 - Do NOT include any explanations, comments, or markdown formatting around the code. ONLY return the raw HTML code."""
         prompt = f"{system_prompt}\n\nNow, create a single-file web application for the following prompt: '{user_prompt}'"
         print(f"🔨 Generating single-page app for: {user_prompt}...")
-        response = await gemini_model.generate_content_async(prompt)
+        response = await GEMINI_MODEL.generate_content_async(prompt)
         html_content = response.text or ""
         if "```html" in html_content:
             m = re.search(r"```html\n(.*?)\n```", html_content, re.DOTALL)
@@ -52,7 +52,7 @@ async def modify_single_page_app(current_html: str, user_feedback: str) -> str:
     Returns:
         The complete, modified HTML code.
     """
-    if not gemini_model:
+    if not GEMINI_MODEL:
         return "<h1>Error: Gemini model not initialized</h1>"
     try:
         system_prompt = """You are an expert web developer. Your task is to modify an existing single-file HTML application based on user feedback.
@@ -65,7 +65,7 @@ IMPORTANT CONSTRAINTS:
 - Do NOT include any explanations, comments, or markdown formatting around the code. ONLY return the raw HTML code."""
         prompt = f"{system_prompt}\n\nHere is the current HTML code:\n```html\n{current_html}\n```\n\nHere is the user's feedback on what to change:\n'{user_feedback}'\n\nNow, please provide the complete, updated HTML code with the requested changes."
         print(f"🔨 Applying modifications for: {user_feedback}...")
-        response = await gemini_model.generate_content_async(prompt)
+        response = await GEMINI_MODEL.generate_content_async(prompt)
         html_content = response.text or ""
         if "```html" in html_content:
             m = re.search(r"```html\n(.*?)\n```", html_content, re.DOTALL)

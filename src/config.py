@@ -25,11 +25,11 @@ assert MY_NUMBER is not None, "MY_NUMBER must be set."
 SESSIONS = {}
 
 # --- Vertex AI Initialization ---
-gemini_model = None
+GEMNINI_MODEL = None
 try:
     # Initialize the Vertex AI client.
     vertexai.init(project=PROJECT_ID, location=LOCATION)
-    gemini_model = GenerativeModel("gemini-2.5-flash")
+    GEMINI_MODEL = GenerativeModel("gemini-2.5-flash")
     print(f"✅ Vertex AI initialized with project: {PROJECT_ID}")
 except Exception as e:
     print(f"⚠️ Vertex AI initialization failed: {e}")

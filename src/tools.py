@@ -20,7 +20,7 @@ from src.preview import ACTIVE_PREVIEWS, find_available_port
 from src.utils import generate_random_project_name, get_unique_project_name
 
 # --- MCP Server ---
-mcp = FastMCP("Vibe Coder MCP Server")
+mcp = FastMCP("vibecode :)")
 
 class RichToolDescription(BaseModel):
     """A Pydantic model for providing rich descriptions for tools."""
@@ -32,6 +32,11 @@ class RichToolDescription(BaseModel):
 async def validate() -> str:
     """A required tool for the MCP server to validate the connection."""
     return MY_NUMBER
+
+
+@mcp.tool
+async def about() -> dict:
+    return {"name": mcp.name, "description": "build and deploy web apps in minutes with vibecode 🤖"}
 
 @mcp.tool(description="Creates a simple, single-file web application from a prompt.")
 async def vibecode(prompt: Annotated[str, Field(description="The prompt describing the app to create")], session_id: Annotated[Optional[str], Field(description="The session ID for the user.")] = None) -> str:

@@ -9,9 +9,11 @@ import signal
 import time
 import httpx
 from urllib.parse import urlparse
+import re
+import json
 
 # --- Preview Configuration ---
-PREVIEW_PORT_RANGE = range(9000, 9002)
+PREVIEW_PORT_RANGE = range(8000, 8021)
 ACTIVE_PREVIEWS = {}  # {port: {'pid': ..., 'project_name': ..., 'creation_time': ..., 'public_url': ...}}
 
 def find_available_port() -> int | None:
@@ -64,73 +66,82 @@ async def reaper_task(cleanup_interval_seconds=60, max_lifetime_seconds=240):
                 ACTIVE_PREVIEWS[port]['project_name'] = None
                 ACTIVE_PREVIEWS[port]['pid'] = None
                 ACTIVE_PREVIEWS[port]['creation_time'] = None
-
-async def log_tunnel_output(process):
-    """Logs the output of the tunnel process."""
-    while True:
-        line = await process.stdout.readline()
-        if not line:
-            break
-        print(f"TUNNEL: {line.decode().strip()}")
-
-async def start_tunnels():
+                
+async def _start_one_cloudflared_tunnel(port: int):
     """
-    Starts tunnels to expose local servers to the internet.
-    This function assumes a tunneling client is configured in the environment
-    to start multiple tunnels.
+    Starts a single cloudflared tunnel and returns its public URL and process.
     """
-    print("--- Starting Port Forwarding Tunnels ---")
-
-    command = ["ngrok", "start", "--all", "--log=stdout"]
-    
+    command = ["cloudflared", "tunnel", "--url", f"http://localhost:{port}", "--output", "json"]
     process = await asyncio.create_subprocess_exec(
         *command,
         stdout=asyncio.subprocess.PIPE,
         stderr=asyncio.subprocess.PIPE
     )
+
+    url_pattern = re.compile(r"https?://[a-zA-Z0-9-]+\.trycloudflare\.com")
     
-    asyncio.create_task(log_tunnel_output(process))
-
-    # Give the tunneling service time to start and establish tunnels
-    await asyncio.sleep(10)
-
-    # Retry mechanism for fetching tunnels
-    for i in range(3):
+    # Try to read the stderr for a few seconds to find the URL
+    for _ in range(10):
+        line_bytes = await process.stderr.readline()
+        if not line_bytes:
+            await asyncio.sleep(0.5)
+            continue
+        
+        line = line_bytes.decode('utf-8').strip()
+        # The URL is in a JSON log line
         try:
-            async with httpx.AsyncClient() as client:
-                # The ngrok agent API runs on localhost:4040 by default
-                response = await client.get("http://127.0.0.1:4040/api/tunnels")
-                response.raise_for_status()
-                tunnels_data = response.json()
-
-            for tunnel in tunnels_data.get("tunnels", []):
-                if tunnel.get('name') == 'mcp-server':
-                    print(f"\n\n🚀 MCP Server is live at: {tunnel['public_url']}/mcp\n\n")
-                if tunnel['proto'] == 'https' and tunnel['name'].startswith('preview-'):
-                    try:
-                        port = urlparse(tunnel['config']['addr']).port
-                        if port:
-                            ACTIVE_PREVIEWS[port] = {
-                                'public_url': tunnel['public_url'],
-                                'project_name': None,
-                                'pid': None,
-                                'creation_time': None
-                            }
-                    except Exception as e:
-                        print(f"❌ Error parsing tunnel address: {e}")
+            log_entry = json.loads(line)
+            if log_entry.get("message") == "Connected to":
+                match = url_pattern.search(log_entry.get("url", ""))
+                if match:
+                    public_url = match.group(0)
+                    print(f"✅ Started cloudflared tunnel for port {port} at {public_url}")
+                    ACTIVE_PREVIEWS[port] = {
+                        'public_url': public_url,
+                        'project_name': None,
+                        'pid': process.pid,
+                        'creation_time': None
+                    }
+                    return
+        except (json.JSONDecodeError, KeyError):
+            # If we get a non-JSON line, it's probably an error.
+            print(f"❌ cloudflared failed to start for port {port}.")
+            print(f"   Error: {line}")
             
-            if ACTIVE_PREVIEWS:
-                print(f"✅ Found {len(ACTIVE_PREVIEWS)} active port forwarding tunnels.")
-                return # Success
+            # Check for common login issue
+            if "failed to unmarshal quick Tunnel" in line:
+                print("\n💡 Hint: This error often means you are not logged into Cloudflare.")
+                print("   Please run `cloudflared tunnel login` in your terminal and follow the instructions.")
 
-        except httpx.RequestError as e:
-            print(f"❌ Could not connect to forwarding agent API to get tunnel info: {e}")
-            if i < 2:
-                await asyncio.sleep(5)
-            else:
-                print("   Please ensure the forwarding agent is running and configured.")
-        except Exception as e:
-            print(f"❌ An error occurred while setting up forwarding tunnels: {e}")
-            break
+            # Ensure the process is terminated before returning
+            if process.returncode is None:
+                try:
+                    process.terminate()
+                    await process.wait()
+                except ProcessLookupError:
+                    pass # Process already terminated
+            return # Exit the function for this port
 
-    print("⚠️ No forwarding tunnels were found after multiple attempts. Previews will not be available.")
+    # If we get here, the tunnel failed to start (timeout)
+    print(f"❌ Failed to start cloudflared tunnel for port {port} (timed out waiting for URL)")
+    if process.returncode is None:
+        try:
+            process.terminate()
+            await process.wait()
+        except ProcessLookupError:
+            pass # Process already terminated
+
+async def start_tunnels():
+    """
+    Starts a cloudflared tunnel for each port in the configured preview range.
+    """
+    print("--- Starting Port Forwarding Tunnels (cloudflared) ---")
+    
+    # Create a task for each tunnel we need to start
+    tasks = [_start_one_cloudflared_tunnel(port) for port in PREVIEW_PORT_RANGE]
+    await asyncio.gather(*tasks)
+
+    if any(p.get('public_url') for p in ACTIVE_PREVIEWS.values()):
+        print(f"✅ Found {len([p for p in ACTIVE_PREVIEWS.values() if p.get('public_url')])} active port forwarding tunnels.")
+    else:
+        print("⚠️ No forwarding tunnels could be established. Previews will not be available.")

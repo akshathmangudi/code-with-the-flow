@@ -1,5 +1,5 @@
 [project]
-name = "vibe-coder"
+name = "code-with-the-flow"
 version = "0.1.0"
 description = "A generative AI application for creating, previewing, and deploying single-page web applications."
 authors = [
