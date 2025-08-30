@@ -1,0 +1,12 @@
+tunnel: b833d6b6-4ca5-42ec-a9a4-fc7003006798
+credentials-file: /home/akshathm/.cloudflared/b833d6b6-4ca5-42ec-a9a4-fc7003006798.json
+
+ingress:
+  # Route vibecode.akshath.tech to your MCP server
+  - hostname: vibecode.akshath.tech
+    service: http://localhost:8086
+  # Route all subdomains to the preview system
+  - hostname: "*.vibecode.akshath.tech"
+    service: http://localhost:80
+  # Catch-all rule (required)
+  - service: http_status:404

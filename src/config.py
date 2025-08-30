@@ -25,7 +25,7 @@ assert MY_NUMBER is not None, "MY_NUMBER must be set."
 SESSIONS = {}
 
 # --- Vertex AI Initialization ---
-GEMNINI_MODEL = None
+GEMINI_MODEL = None
 try:
     # Initialize the Vertex AI client.
     vertexai.init(project=PROJECT_ID, location=LOCATION)

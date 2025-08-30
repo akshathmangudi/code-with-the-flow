@@ -3,6 +3,9 @@ __pycache__/
 *.py[codz]
 *$py.class
 
+# Local project storage (temporary)
+projects/
+
 # C extensions
 *.so
 

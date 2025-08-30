@@ -43,25 +43,27 @@ def generate_random_project_name() -> str:
     num = random.randint(1000, 9999)
     return f"{adj}-{noun}-{num}"
 
-def get_unique_project_name(base_name: str, base_dir: str = ".") -> tuple[str, str]:
+def get_unique_project_name(base_name: str, base_dir: str = ".") -> str:
     """
-    Generates a unique project name and path by appending a number if the directory already exists.
+    Generates a unique project name by appending a number if the directory already exists.
 
     Args:
         base_name: The initial desired name for the project.
         base_dir: The directory where projects are stored.
 
     Returns:
-        A tuple containing the unique project name and its full, unique path.
+        A unique project name.
     """
+    from pathlib import Path
+    
     project_name = base_name
-    project_dir = os.path.abspath(os.path.join(base_dir, project_name))
+    project_dir = Path(base_dir) / project_name
     counter = 2
-    while os.path.exists(project_dir):
+    while project_dir.exists():
         project_name = f"{base_name}-{counter}"
-        project_dir = os.path.abspath(os.path.join(base_dir, project_name))
+        project_dir = Path(base_dir) / project_name
         counter += 1
-    return project_name, project_dir
+    return project_name
 
 
 def is_port_in_use(port: int) -> bool:
